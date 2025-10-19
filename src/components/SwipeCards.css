@@ -20,6 +20,8 @@
   color: white;
   animation: fadeIn 1s ease;
   margin-bottom: 2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 
+               0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .hero-title {
@@ -27,18 +29,27 @@
   font-weight: 800;
   margin-bottom: 1rem;
   line-height: 1.2;
+  color: #ffffff;
+  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.4), 
+               0 4px 25px rgba(0, 0, 0, 0.3),
+               0 0 40px rgba(102, 126, 234, 0.3);
 }
 
 .highlight {
-  background: linear-gradient(135deg, #fff, #ffd3d3);
+  background: linear-gradient(135deg, #ffffff, #ffd3d3);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .hero-subtitle {
   font-size: clamp(1rem, 2vw, 1.25rem);
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 
+               0 3px 15px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
 }
 
 .card-stack {
