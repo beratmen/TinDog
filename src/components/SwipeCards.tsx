@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { Heart, X } from 'lucide-react'
+import { useState, useCallback, useEffect } from 'react'
+import { Heart, X, RotateCcw } from 'lucide-react'
 import DogCard from './DogCard.tsx'
 import './SwipeCards.css'
 
-interface Dog {
+export interface Dog {
   id: number
   name: string
   age: number
@@ -17,6 +17,9 @@ interface Dog {
 interface SwipeCardsProps {
   onMatch: () => void
 }
+
+type SwipeDirection = 'left' | 'right'
+type AnimationType = 'like' | 'nope' | null
 
 const DOGS: Dog[] = [
   {
@@ -101,13 +104,22 @@ const DOGS: Dog[] = [
   },
 ]
 
+/**
+ * SwipeCards Component
+ * Main swipe interface for dog profiles
+ */
 function SwipeCards({ onMatch }: SwipeCardsProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [showAnimation, setShowAnimation] = useState<'like' | 'nope' | null>(null)
+  const [showAnimation, setShowAnimation] = useState<AnimationType>(null)
+  const [swipeHistory, setSwipeHistory] = useState<number[]>([])
 
   const currentDog = DOGS[currentIndex]
 
-  const handleSwipe = (direction: 'left' | 'right') => {
+  /**
+   * Handle swipe action
+   * @param direction - 'left' for pass, 'right' for like
+   */
+  const handleSwipe = useCallback((direction: SwipeDirection) => {
     setShowAnimation(direction === 'right' ? 'like' : 'nope')
     
     setTimeout(() => {
@@ -115,14 +127,48 @@ function SwipeCards({ onMatch }: SwipeCardsProps) {
         onMatch()
       }
       
+      // Add to history
+      setSwipeHistory((prev) => [...prev, currentIndex])
+      
+      // Move to next dog
       if (currentIndex < DOGS.length - 1) {
-        setCurrentIndex(currentIndex + 1)
+        setCurrentIndex((prev) => prev + 1)
       } else {
         setCurrentIndex(0) // Reset to first dog
       }
       setShowAnimation(null)
     }, 300)
-  }
+  }, [currentIndex, onMatch])
+
+  /**
+   * Undo last swipe
+   */
+  const handleUndo = useCallback(() => {
+    if (swipeHistory.length > 0) {
+      const lastIndex = swipeHistory[swipeHistory.length - 1]
+      if (lastIndex !== undefined) {
+        setCurrentIndex(lastIndex)
+        setSwipeHistory((prev) => prev.slice(0, -1))
+      }
+    }
+  }, [swipeHistory])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        handleSwipe('left')
+      } else if (e.key === 'ArrowRight') {
+        handleSwipe('right')
+      } else if (e.key === 'z' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        handleUndo()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [handleSwipe, handleUndo])
 
   if (!currentDog) {
     return (
@@ -174,14 +220,26 @@ function SwipeCards({ onMatch }: SwipeCardsProps) {
           <button
             className="swipe-button nope"
             onClick={() => handleSwipe('left')}
-            aria-label="Pass"
+            aria-label="Pass (Arrow Left)"
+            title="Pass (Arrow Left)"
           >
             <X size={32} />
           </button>
+          {swipeHistory.length > 0 && (
+            <button
+              className="swipe-button undo"
+              onClick={handleUndo}
+              aria-label="Undo (Cmd/Ctrl + Z)"
+              title="Undo last swipe (Cmd/Ctrl + Z)"
+            >
+              <RotateCcw size={28} />
+            </button>
+          )}
           <button
             className="swipe-button like"
             onClick={() => handleSwipe('right')}
-            aria-label="Like"
+            aria-label="Like (Arrow Right)"
+            title="Like (Arrow Right)"
           >
             <Heart size={32} fill="currentColor" />
           </button>
@@ -189,6 +247,9 @@ function SwipeCards({ onMatch }: SwipeCardsProps) {
 
         <div className="progress">
           <span>{currentIndex + 1} / {DOGS.length}</span>
+          {swipeHistory.length > 0 && (
+            <span className="hint">Press Cmd/Ctrl+Z to undo</span>
+          )}
         </div>
       </div>
     </section>

@@ -1,17 +1,85 @@
-* {
+/* ========================================
+   Global Reset & Base Styles
+   ======================================== */
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ========================================
+   CSS Custom Properties (Design Tokens)
+   ======================================== */
+
 :root {
+  /* Primary Colors */
   --primary-color: #ff6b6b;
+  --primary-hover: #ff5252;
+  --primary-light: #ff8787;
+  
+  /* Secondary Colors */
   --secondary-color: #4ecdc4;
+  --secondary-hover: #44b3aa;
+  --secondary-light: #6eddd7;
+  
+  /* Gradients */
   --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --primary-gradient: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  --secondary-gradient: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
+  
+  /* Shadows */
   --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 15px 50px rgba(0, 0, 0, 0.25);
+  --button-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  
+  /* Text Colors */
   --text-dark: #2d3436;
   --text-light: #636e72;
+  --text-muted: #b2bec3;
   --white: #ffffff;
+  
+  /* Background Colors */
+  --bg-light: #f8f9fa;
+  --bg-gray: #e9ecef;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Z-Index */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal: 1040;
+  --z-tooltip: 1050;
+}
+
+/* ========================================
+   Base Elements
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -20,14 +88,41 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   background: var(--bg-gradient);
+  background-attachment: fixed;
   min-height: 100vh;
   overflow-x: hidden;
+  color: var(--text-dark);
+  line-height: 1.6;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   Typography
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+p {
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition-base);
 }
 
 code {
@@ -35,9 +130,13 @@ code {
     monospace;
 }
 
-/* Scrollbar styling */
+/* ========================================
+   Scrollbar Styling
+   ======================================== */
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -46,9 +145,55 @@ code {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-base);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   Selection Styling
+   ======================================== */
+
+::selection {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+::-moz-selection {
+  background: var(--primary-color);
+  color: var(--white);
+}
+
+/* ========================================
+   Accessibility
+   ======================================== */
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  body {
+    background: white;
+  }
 }

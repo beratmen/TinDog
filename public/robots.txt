@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://tindog-six-azure.vercel.app/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 10

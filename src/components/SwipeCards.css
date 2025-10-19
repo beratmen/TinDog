@@ -129,11 +129,29 @@
   color: white;
 }
 
+.swipe-button.undo {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  width: 60px;
+  height: 60px;
+  animation: fadeIn 0.3s ease;
+}
+
 .progress {
   color: white;
   font-size: 1.1rem;
   font-weight: 600;
   animation: fadeIn 0.8s ease 0.6s both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress .hint {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  font-weight: 400;
 }
 
 .no-more-dogs {
